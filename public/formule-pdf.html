@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Embarq — Formule PDF (29,99 €)</title>
+<meta name="description" content="Votre bon de commande de voyage transformé en itinéraire PDF élégant, livré par e-mail sous 24h." />
+
+<style>
+  :root{--sand:#F4EEE3;--sand-2:#EDE4D3;--ink:#1C2B33;--ink-soft:#465863;--teal:#0E5C63;--teal-deep:#0A4248;--gold:#C8A15A;--gold-soft:#E4CB97;--shadow:0 18px 50px -20px rgba(28,43,51,.35);--maxw:1080px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:"Helvetica Neue",Arial,sans-serif;color:var(--ink);background:var(--sand);line-height:1.55;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:Georgia,serif;font-weight:600;letter-spacing:-.01em;line-height:1.12}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  a{color:inherit;text-decoration:none}
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(244,238,227,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(28,43,51,.07)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:70px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:Georgia,serif;font-size:23px;font-weight:600}
+  .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(200,161,90,.18)}
+  .back{font-size:14px;color:var(--ink-soft)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;font-size:15px;font-weight:600;padding:14px 26px;border-radius:999px;transition:transform .15s,box-shadow .2s,background .2s}
+  .btn-primary{background:var(--teal);color:#fff}
+  .btn-primary:hover{background:var(--teal-deep);transform:translateY(-1px);box-shadow:0 10px 24px -10px rgba(14,92,99,.6)}
+  .hero{padding:64px 0 30px}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);font-weight:700;margin-bottom:18px}
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--gold)}
+  .layout{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:start;padding-bottom:80px}
+  @media(max-width:880px){.layout{grid-template-columns:1fr;gap:34px}}
+  h1{font-size:46px;margin-bottom:18px}
+  h1 em{font-style:italic;color:var(--teal)}
+  .lead{font-size:18px;color:var(--ink-soft);margin-bottom:26px}
+  .incl{list-style:none;display:flex;flex-direction:column;gap:13px;margin:8px 0 30px}
+  .incl li{display:flex;gap:11px;font-size:16px}
+  .incl li::before{content:"✓";color:var(--teal);font-weight:800}
+  .photo{border-radius:18px;overflow:hidden;box-shadow:var(--shadow);aspect-ratio:16/10;margin-bottom:18px;position:relative}
+  .photo img{width:100%;height:100%;object-fit:cover;display:block}
+  .photo .cap{position:absolute;bottom:10px;right:12px;font-size:11px;color:#fff;background:rgba(20,30,35,.55);padding:4px 10px;border-radius:999px;backdrop-filter:blur(4px)}
+  .card{background:#fff;border-radius:22px;box-shadow:var(--shadow);padding:30px;border:1px solid rgba(28,43,51,.06);position:sticky;top:90px}
+  .price{font-family:Georgia,serif;font-size:44px;font-weight:600;margin-bottom:2px}
+  .price small{font-size:16px;color:var(--ink-soft);font-weight:400}
+  .ptag{font-size:14px;color:var(--ink-soft);margin-bottom:20px}
+  .dropzone{border:2px dashed var(--gold-soft);border-radius:14px;background:linear-gradient(180deg,#FCFAF5,#F6F0E4);padding:28px 18px;text-align:center;cursor:pointer;transition:all .2s}
+  .dropzone.hover{border-color:var(--teal);background:#F0F6F5}
+  .dropzone .ic{width:48px;height:48px;margin:0 auto 10px;border-radius:12px;background:var(--teal);display:flex;align-items:center;justify-content:center}
+  .dropzone .ic svg{width:24px;height:24px;stroke:#fff}
+  .dropzone strong{display:block;font-size:15px;font-family:Georgia,serif}
+  .dropzone span{font-size:12.5px;color:var(--ink-soft)}
+  .filelist{margin:14px 0;display:flex;flex-direction:column;gap:8px}
+  .fileitem{display:flex;align-items:center;gap:10px;background:#F4F0E8;border-radius:10px;padding:9px 12px;font-size:13.5px}
+  .fileitem .fi{width:28px;height:28px;border-radius:7px;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+  .fileitem .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .fileitem .rm{cursor:pointer;color:var(--ink-soft);border:none;background:none;font-size:17px}
+  .card .btn{width:100%;margin-top:6px}
+  .mini{margin-top:12px;font-size:12px;color:var(--ink-soft);text-align:center}
+  footer{background:var(--ink);color:#9DB0B8;padding:30px 0;font-size:13.5px;text-align:center}
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--ink);color:#fff;padding:14px 22px;border-radius:12px;font-size:14px;box-shadow:var(--shadow);transition:transform .35s cubic-bezier(.2,.8,.2,1);z-index:200;max-width:90vw}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap nav-inner">
+  <a href="index.html" class="brand"><span class="dot"></span>Embarq</a>
+  <a href="index.html" class="back">← Retour à l'accueil</a>
+</div></header>
+
+<div class="wrap hero"><span class="eyebrow">Formule PDF</span></div>
+<div class="wrap layout">
+  <div>
+    <h1>Votre voyage, <em>sublimé</em> en PDF.</h1>
+    <p class="lead">Transformez votre simple bon de commande en un véritable itinéraire de voyage. Déposez votre confirmation — hôtel, vol ou logement — et recevez sous 24 h un document PDF élégant, clair et soigneusement mis en page.</p>
+    <div class="photo">
+      <img loading="lazy" alt="Itinéraire de voyage sur écran" src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1200&q=80" />
+      <span class="cap">✦ Visuel généré par IA</span>
+    </div>
+    <h3 style="font-size:21px;margin-bottom:6px">Ce qui est inclus</h3>
+    <ul class="incl">
+      <li>Itinéraire PDF entièrement mis en page</li>
+      <li>Extraction automatique : dates, horaires, lieux, références</li>
+      <li>Livré par e-mail sous 24 h</li>
+      <li>À garder sur le téléphone, partager ou imprimer librement</li>
+      <li>Paiement unique, sans abonnement</li>
+    </ul>
+  </div>
+
+  <div class="card" id="drop">
+    <div class="price">29,99 € <small>/ itinéraire</small></div>
+    <div class="ptag">Le numérique, raffiné.</div>
+    <div class="dropzone" id="dropzone">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"/><path d="m6 10 6-6 6 6"/><path d="M4 20h16"/></svg></div>
+      <strong>Glissez votre bon de commande</strong>
+      <span>ou cliquez · PDF, JPG, PNG (max 15 Mo)</span>
+      <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" multiple hidden />
+    </div>
+    <div class="filelist" id="filelist"></div>
+    <button class="btn btn-primary" id="pay">Payer 29,99 € et envoyer</button>
+    <p class="mini">🔒 Document privé, supprimé après traitement.</p>
+  </div>
+</div>
+
+<footer>© 2026 Embarq — Conçu pour les voyageurs soigneux.</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const PLAN = "pdf";
+const toastEl=document.getElementById('toast');let tt;
+function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>toastEl.classList.remove('show'),3800);}
+const dz=document.getElementById('dropzone'),input=document.getElementById('fileInput'),list=document.getElementById('filelist');let files=[];
+dz.addEventListener('click',()=>input.click());
+input.addEventListener('change',e=>add(e.target.files));
+['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('hover')}));
+['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('hover')}));
+dz.addEventListener('drop',e=>add(e.dataTransfer.files));
+function add(fl){for(const f of fl){if(f.size>15*1024*1024){toast('"'+f.name+'" depasse 15 Mo.');continue;}files.push(f);}render();if(fl.length)toast('Document ajoute.');}
+function render(){list.innerHTML='';files.forEach((f,i)=>{const ext=(f.name.split('.').pop()||'').toUpperCase().slice(0,3);const el=document.createElement('div');el.className='fileitem';el.innerHTML='<div class="fi">'+ext+'</div><div class="nm">'+f.name+'</div><button class="rm">x</button>';el.querySelector('.rm').addEventListener('click',()=>{files.splice(i,1);render();});list.appendChild(el);});}
+document.getElementById('pay').addEventListener('click',async()=>{
+  if(files.length===0){document.getElementById('drop').scrollIntoView({behavior:'smooth'});toast('Deposez d abord votre bon de commande.');return;}
+  const btn=document.getElementById('pay');btn.disabled=true;const o=btn.textContent;btn.textContent='Redirection...';
+  try{
+    const fd=new FormData();
+    fd.append('plan',PLAN);
+    files.forEach(f=>fd.append('documents',f));
+    const r=await fetch('/api/create-checkout-session',{method:'POST',body:fd});
+    const data=await r.json();
+    if(data.url){window.location.href=data.url;}
+    else{toast(data.error||'Erreur lors de la creation du paiement.');btn.disabled=false;btn.textContent=o;}
+  }catch(err){toast('Erreur reseau : '+err.message);btn.disabled=false;btn.textContent=o;}
+});
+const p=new URLSearchParams(location.search);
+if(p.get('paiement')==='succes')toast('Paiement recu ! Votre itineraire arrive par e-mail.');
+else if(p.get('paiement')==='annule')toast('Paiement annule.');
+</script>
+</body>
+</html>
