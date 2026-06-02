@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Embarq — Pack 10 Roadbooks (Agences)</title>
+<meta name="description" content="10 roadbooks Embarq pour les agences de voyage et voyageurs réguliers. Tarif dégressif." />
+<style>
+  :root{--sand:#F4EEE3;--sand-2:#EDE4D3;--ink:#1C2B33;--ink-soft:#465863;--teal:#0E5C63;--teal-deep:#0A4248;--gold:#C8A15A;--gold-soft:#E4CB97;--shadow:0 18px 50px -20px rgba(28,43,51,.35);--maxw:1080px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:"Helvetica Neue",Arial,sans-serif;color:var(--ink);background:var(--sand);line-height:1.55;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:Georgia,serif;font-weight:600;letter-spacing:-.01em;line-height:1.12}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  a{color:inherit;text-decoration:none}
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(244,238,227,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(28,43,51,.07)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:70px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:Georgia,serif;font-size:23px;font-weight:600}
+  .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(200,161,90,.18)}
+  .back{font-size:14px;color:var(--ink-soft)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;font-size:15px;font-weight:600;padding:14px 26px;border-radius:999px;transition:transform .15s,box-shadow .2s,background .2s}
+  .btn-primary{background:var(--teal);color:#fff}
+  .btn-primary:hover{background:var(--teal-deep);transform:translateY(-1px);box-shadow:0 10px 24px -10px rgba(14,92,99,.6)}
+  .hero{padding:64px 0 30px}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:18px}
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--gold)}
+  .layout{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:start;padding-bottom:80px}
+  @media(max-width:880px){.layout{grid-template-columns:1fr;gap:34px}}
+  h1{font-size:46px;margin-bottom:18px}
+  h1 em{font-style:italic;color:var(--gold)}
+  .lead{font-size:18px;color:var(--ink-soft);margin-bottom:26px}
+  .incl{list-style:none;display:flex;flex-direction:column;gap:13px;margin:8px 0 30px}
+  .incl li{display:flex;gap:11px;font-size:16px}
+  .incl li::before{content:"✓";color:var(--gold);font-weight:800}
+  .photo{border-radius:18px;overflow:hidden;box-shadow:var(--shadow);aspect-ratio:16/10;margin-bottom:18px;position:relative}
+  .photo img{width:100%;height:100%;object-fit:cover;display:block}
+  .photo .cap{position:absolute;bottom:10px;right:12px;font-size:11px;color:#fff;background:rgba(20,30,35,.55);padding:4px 10px;border-radius:999px;backdrop-filter:blur(4px)}
+  .card{background:linear-gradient(180deg,#fff,#FFFDF8);border-radius:22px;box-shadow:var(--shadow);padding:30px;border:1.5px solid var(--gold);position:sticky;top:90px}
+  .badge{display:inline-block;background:var(--gold);color:#fff;font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 14px;border-radius:999px;margin-bottom:14px}
+  .price{font-family:Georgia,serif;font-size:44px;font-weight:600;margin-bottom:2px}
+  .price small{font-size:16px;color:var(--ink-soft);font-weight:400}
+  .ptag{font-size:14px;color:var(--ink-soft);margin-bottom:8px}
+  .save{font-size:13px;color:var(--teal);font-weight:600;margin-bottom:20px}
+  .card .btn{width:100%;margin-top:6px}
+  .mini{margin-top:12px;font-size:12px;color:var(--ink-soft);text-align:center}
+  footer{background:var(--ink);color:#9DB0B8;padding:30px 0;font-size:13.5px;text-align:center}
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--ink);color:#fff;padding:14px 22px;border-radius:12px;font-size:14px;box-shadow:var(--shadow);transition:transform .35s cubic-bezier(.2,.8,.2,1);z-index:200;max-width:90vw}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap nav-inner">
+  <a href="index.html" class="brand"><span class="dot"></span>Embarq</a>
+  <a href="index.html" class="back">← Retour à l'accueil</a>
+</div></header>
+
+<div class="wrap hero"><span class="eyebrow">Pour les agences</span></div>
+<div class="wrap layout">
+  <div>
+    <h1>Pack <em>10 Roadbooks</em> Embarq.</h1>
+    <p class="lead">La formule pensée pour les agences de voyage et les voyageurs réguliers. Offrez à chaque dossier client un roadbook complet, et bénéficiez d'un tarif dégressif par rapport à l'achat à l'unité.</p>
+    <div class="photo">
+      <img loading="lazy" alt="Agence de voyage préparant des itinéraires" src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=80" />
+      <span class="cap">✦ Visuel généré par IA</span>
+    </div>
+    <h3 style="font-size:21px;margin-bottom:6px">Ce qui est inclus</h3>
+    <ul class="incl">
+      <li>10 roadbooks à utiliser quand vous voulez</li>
+      <li>Pour chaque réservation : données des tickets enrichies (lieux, restaurants, bars, bons plans)</li>
+      <li>Livraison de chaque roadbook en PDF sous 72 h</li>
+      <li>Idéal pour valoriser chaque dossier client</li>
+      <li>Tarif dégressif vs achat à l'unité</li>
+    </ul>
+    <p style="font-size:14px;color:var(--ink-soft)">Après l'achat, notre équipe vous recontacte pour organiser l'envoi de vos 10 réservations. Une question ? <a href="mailto:ts@sartenaer.eu" style="color:var(--teal);text-decoration:underline">ts@sartenaer.eu</a></p>
+  </div>
+
+  <div class="card" id="buy">
+    <span class="badge">Offre agences</span>
+    <div class="price">210 € <small>/ 10 roadbooks</small></div>
+    <div class="ptag">Soit 21 € par roadbook.</div>
+    <div class="save">Vous économisez près de 90 € (vs 29,99 €/unité).</div>
+    <button class="btn btn-primary" id="pay">Acheter le pack — 210 €</button>
+    <p class="mini">🔒 Paiement sécurisé via Stripe. Paiement unique.</p>
+  </div>
+</div>
+
+<footer>© 2026 Embarq — Conçu pour les voyageurs soigneux.</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const PLAN = "pack";
+const toastEl=document.getElementById('toast');let tt;
+function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>toastEl.classList.remove('show'),3800);}
+document.getElementById('pay').addEventListener('click',async()=>{
+  const btn=document.getElementById('pay');btn.disabled=true;const o=btn.textContent;btn.textContent='Redirection...';
+  try{
+    const fd=new FormData();
+    fd.append('plan',PLAN);
+    const r=await fetch('/api/create-checkout-session',{method:'POST',body:fd});
+    const data=await r.json();
+    if(data.url){window.location.href=data.url;}
+    else{toast(data.error||'Erreur lors de la creation du paiement.');btn.disabled=false;btn.textContent=o;}
+  }catch(err){toast('Erreur reseau : '+err.message);btn.disabled=false;btn.textContent=o;}
+});
+const p=new URLSearchParams(location.search);
+if(p.get('paiement')==='succes')toast('Paiement recu ! Notre equipe vous recontacte tres vite.');
+else if(p.get('paiement')==='annule')toast('Paiement annule.');
+</script>
+</body>
+</html>
