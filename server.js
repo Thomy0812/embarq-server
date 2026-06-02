@@ -173,49 +173,52 @@ app.get('/admin/file/:name', adminAuth, (req, res) => {
 
 app.get('/admin', adminAuth, (req, res) => res.type('html').send(ADMIN_HTML));
 
-const ADMIN_HTML = [
-'<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">',
-'<meta name="viewport" content="width=device-width, initial-scale=1">',
-'<title>Embarq — Commandes</title><style>',
-':root{--sand:#F4EEE3;--ink:#1C2B33;--ink-soft:#465863;--teal:#0E5C63}',
-'*{box-sizing:border-box;margin:0;padding:0}',
-'body{font-family:Arial,sans-serif;background:var(--sand);color:var(--ink);padding:28px}',
-'h1{font-family:Georgia,serif;font-size:28px;margin-bottom:4px}',
-'.sub{color:var(--ink-soft);margin-bottom:24px;font-size:14px}',
-'.bar{display:flex;gap:12px;margin-bottom:18px}',
-'.bar input{flex:1;max-width:320px;padding:10px 14px;border:1px solid #d9d2c4;border-radius:10px}',
-'.btn{background:var(--teal);color:#fff;border:none;padding:10px 16px;border-radius:10px;cursor:pointer}',
-'table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden}',
-'th,td{text-align:left;padding:14px 16px;font-size:14px;border-bottom:1px solid #eee}',
-'th{background:#fbf8f1;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft)}',
-'.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;background:#eef4f3;color:var(--teal)}',
-'.pill.prem{background:#fbf2dd;color:#9a7320}',
-'.file{display:inline-block;margin:2px 6px 2px 0;padding:6px 12px;background:var(--teal);color:#fff;border-radius:8px;text-decoration:none;font-size:13px}',
-'.empty{padding:40px;text-align:center;color:var(--ink-soft)}',
-'.amount{font-family:Georgia,serif;font-weight:600}',
-'</style></head><body>',
-'<h1>Commandes Embarq</h1>',
-'<div class="sub">Tableau de bord interne — chaque commande payée et ses documents à télécharger.</div>',
-'<div class="bar"><input id="q" placeholder="Rechercher (client, formule…)"><button class="btn" onclick="load()">Actualiser</button></div>',
-'<div id="wrap"></div>',
-'<script>',
-'async function load(){',
-' const r=await fetch("/admin/orders");const orders=await r.json();',
-' const q=(document.getElementById("q").value||"").toLowerCase();',
-' const list=orders.filter(o=>JSON.stringify(o).toLowerCase().includes(q));',
-' if(!list.length){document.getElementById("wrap").innerHTML="<div class=\\\\"empty\\\\">Aucune commande pour le moment.</div>";return;}',
-' let h="<table><thead><tr><th>Date</th><th>Formule</th><th>Client</th><th>Montant</th><th>Documents</th></tr></thead><tbody>";',
-' for(const o of list){',
-'  const d=new Date(o.date).toLocaleString("fr-FR");',
-'  const prem=o.plan==="premium"?" prem":"";',
-'  const files=(o.files||[]).map(f=>"<a class=\\\\"file\\\\" href=\\\\"/admin/file/"+encodeURIComponent(f.stored)+"\\\\">⬇ "+f.original+"</a>").join("")||"—";',
-'  h+="<tr><td>"+d+"</td><td><span class=\\\\"pill"+prem+"\\\\">"+o.plan_label+"</span></td><td>"+(o.customer||"—")+"</td><td class=\\\\"amount\\\\">"+o.amount+" "+o.currency+"</td><td>"+files+"</td></tr>";',
-' }',
-' h+="</tbody></table>";document.getElementById("wrap").innerHTML=h;',
-'}',
-'document.getElementById("q").addEventListener("input",load);load();',
-'</script></body></html>'
-].join('\n');
+const ADMIN_HTML = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Embarq — Commandes</title><style>
+:root{--sand:#F4EEE3;--ink:#1C2B33;--ink-soft:#465863;--teal:#0E5C63}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:var(--sand);color:var(--ink);padding:28px}
+h1{font-family:Georgia,serif;font-size:28px;margin-bottom:4px}
+.sub{color:var(--ink-soft);margin-bottom:24px;font-size:14px}
+.bar{display:flex;gap:12px;margin-bottom:18px}
+.bar input{flex:1;max-width:320px;padding:10px 14px;border:1px solid #d9d2c4;border-radius:10px}
+.btn{background:var(--teal);color:#fff;border:none;padding:10px 16px;border-radius:10px;cursor:pointer}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden}
+th,td{text-align:left;padding:14px 16px;font-size:14px;border-bottom:1px solid #eee}
+th{background:#fbf8f1;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft)}
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;background:#eef4f3;color:var(--teal)}
+.pill.prem{background:#fbf2dd;color:#9a7320}
+.file{display:inline-block;margin:2px 6px 2px 0;padding:6px 12px;background:var(--teal);color:#fff;border-radius:8px;text-decoration:none;font-size:13px}
+.empty{padding:40px;text-align:center;color:var(--ink-soft)}
+.amount{font-family:Georgia,serif;font-weight:600}
+</style></head><body>
+<h1>Commandes Embarq</h1>
+<div class="sub">Tableau de bord interne — chaque commande payée et ses documents à télécharger.</div>
+<div class="bar"><input id="q" placeholder="Rechercher (client, formule)"><button class="btn" onclick="load()">Actualiser</button></div>
+<div id="wrap"></div>
+<script>
+async function load(){
+  try{
+    const r=await fetch('/admin/orders');const orders=await r.json();
+    const q=(document.getElementById('q').value||'').toLowerCase();
+    const list=orders.filter(function(o){return JSON.stringify(o).toLowerCase().includes(q);});
+    const wrap=document.getElementById('wrap');
+    if(!list.length){wrap.innerHTML='<div class="empty">Aucune commande pour le moment.</div>';return;}
+    var h='<table><thead><tr><th>Date</th><th>Formule</th><th>Client</th><th>Montant</th><th>Documents</th></tr></thead><tbody>';
+    for(var i=0;i<list.length;i++){
+      var o=list[i];
+      var d=new Date(o.date).toLocaleString('fr-FR');
+      var prem=o.plan==='premium'?' prem':'';
+      var files=(o.files||[]).map(function(f){return '<a class="file" href="/admin/file/'+encodeURIComponent(f.stored)+'">Telecharger '+f.original+'</a>';}).join('')||'-';
+      h+='<tr><td>'+d+'</td><td><span class="pill'+prem+'">'+o.plan_label+'</span></td><td>'+(o.customer||'-')+'</td><td class="amount">'+o.amount+' '+o.currency+'</td><td>'+files+'</td></tr>';
+    }
+    h+='</tbody></table>';wrap.innerHTML=h;
+  }catch(e){document.getElementById('wrap').innerHTML='<div class="empty">Erreur de chargement : '+e.message+'</div>';}
+}
+document.getElementById('q').addEventListener('input',load);
+load();
+</script></body></html>`;
 
 const PORT = process.env.PORT || 4242;
 app.listen(PORT, () => console.log('Embarq server en écoute sur http://localhost:' + PORT));
