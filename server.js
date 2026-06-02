@@ -22,6 +22,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const PLANS = {
   pdf: { label: 'Formule PDF', price: process.env.PRICE_PDF },
   premium: { label: 'Impression premium', price: process.env.PRICE_PREMIUM },
+  pack: { label: 'Pack 10 Roadbooks', price: process.env.PRICE_PACK, noFile: true },
 };
 
 // ---- Stockage des fichiers déposés ----
@@ -83,9 +84,10 @@ app.post('/api/create-checkout-session', upload.array('documents', 10), async (r
   try {
     const plan = PLANS[req.body.plan];
     if (!plan || !plan.price) return res.status(400).json({ error: 'Formule inconnue.' });
-    if (!req.files || req.files.length === 0) return res.status(400).json({ error: 'Aucun document fourni.' });
+    if (!plan.noFile && (!req.files || req.files.length === 0)) return res.status(400).json({ error: 'Aucun document fourni.' });
     const fileNames = req.files.map((f) => f.filename).join(',');
-    const page = req.body.plan === 'premium' ? 'formule-premium.html' : 'formule-pdf.html';
+    const pages = { premium: 'formule-premium.html', pack: 'formule-pack.html', pdf: 'formule-pdf.html' };
+    const page = pages[req.body.plan] || 'formule-pdf.html';
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       line_items: [{ price: plan.price, quantity: 1 }],
