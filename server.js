@@ -140,7 +140,7 @@ async function handlePaidOrder(session) {
         from: process.env.MAIL_FROM,
         to: customer,
         subject: 'Embarq — votre commande est bien reçue',
-        text: 'Merci pour votre confiance !\n\nNous avons bien reçu votre document et votre paiement pour la « ' + label + ' ». Votre itinéraire de voyage vous sera transmis sous 24 h.\n\nL\'équipe Embarq',
+        text: 'Merci pour votre confiance !\n\nNous avons bien reçu votre document et votre paiement pour la « ' + label + ' ». Votre itinéraire de voyage vous sera transmis sous 72 h.\n\nL\'équipe Embarq',
       });
     } catch (e) { console.error('E-mail client échoué :', e.message); }
   }
