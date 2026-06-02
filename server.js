@@ -88,13 +88,26 @@ app.post('/api/create-checkout-session', upload.array('documents', 10), async (r
     const fileNames = req.files.map((f) => f.filename).join(',');
     const pages = { premium: 'formule-premium.html', pack: 'formule-pack.html', pdf: 'formule-pdf.html' };
     const page = pages[req.body.plan] || 'formule-pdf.html';
+    const lineItems = [{ price: plan.price, quantity: 1 }];
+    const printQty = Math.max(0, Math.min(100, parseInt(req.body.print_qty, 10) || 0));
+    if (printQty > 0 && process.env.PRICE_IMPRESSION) {
+      lineItems.push({ price: process.env.PRICE_IMPRESSION, quantity: printQty });
+    }
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
-      line_items: [{ price: plan.price, quantity: 1 }],
+      line_items: lineItems,
       success_url: process.env.PUBLIC_URL + '/' + page + '?paiement=succes',
       cancel_url: process.env.PUBLIC_URL + '/' + page + '?paiement=annule',
       customer_email: req.body.email || undefined,
-      metadata: { plan: req.body.plan, plan_label: plan.label, files: fileNames },
+      metadata: {
+        plan: req.body.plan,
+        plan_label: plan.label,
+        files: fileNames,
+        customer_name: (req.body.name || '').slice(0, 200),
+        customer_phone: (req.body.phone || '').slice(0, 60),
+        note: (req.body.note || '').slice(0, 480),
+        print_qty: String(printQty),
+      },
     });
     res.json({ url: session.url });
   } catch (err) {
@@ -111,6 +124,10 @@ async function handlePaidOrder(session) {
   }));
   const label = session.metadata?.plan_label || 'Commande';
   const customer = session.customer_details?.email || session.customer_email;
+  const cname = session.metadata?.customer_name || '';
+  const cphone = session.metadata?.customer_phone || '';
+  const note = session.metadata?.note || '';
+  const printQty = session.metadata?.print_qty || '0';
 
   // 0) Enregistrement dans le journal (tableau de bord)
   saveOrder({
@@ -119,6 +136,10 @@ async function handlePaidOrder(session) {
     plan: session.metadata?.plan || '',
     plan_label: label,
     customer: customer || '',
+    name: cname,
+    phone: cphone,
+    note: note,
+    print_qty: printQty,
     amount: (session.amount_total / 100).toFixed(2),
     currency: (session.currency || 'eur').toUpperCase(),
     files: files.map((name) => ({ stored: name, original: name.split('__').slice(1).join('__') || name })),
@@ -130,7 +151,14 @@ async function handlePaidOrder(session) {
       from: process.env.MAIL_FROM,
       to: process.env.ADMIN_EMAIL,
       subject: 'Nouvelle commande Embarq — ' + label,
-      text: 'Formule : ' + label + '\nClient : ' + (customer || 'non renseigné') + '\nMontant : ' + (session.amount_total / 100).toFixed(2) + ' ' + (session.currency || '').toUpperCase() + '\nSession : ' + session.id,
+      text: 'Formule : ' + label
+        + '\nNom : ' + (cname || 'non renseigné')
+        + '\nTéléphone : ' + (cphone || 'non renseigné')
+        + '\nE-mail : ' + (customer || 'non renseigné')
+        + '\nNote : ' + (note || '—')
+        + '\nImpressions : ' + printQty + ' x 25 EUR'
+        + '\nMontant : ' + (session.amount_total / 100).toFixed(2) + ' ' + (session.currency || '').toUpperCase()
+        + '\nSession : ' + session.id,
       attachments,
     });
   } catch (e) { console.error('E-mail interne échoué :', e.message); }
@@ -207,13 +235,15 @@ async function load(){
     const list=orders.filter(function(o){return JSON.stringify(o).toLowerCase().includes(q);});
     const wrap=document.getElementById('wrap');
     if(!list.length){wrap.innerHTML='<div class="empty">Aucune commande pour le moment.</div>';return;}
-    var h='<table><thead><tr><th>Date</th><th>Formule</th><th>Client</th><th>Montant</th><th>Documents</th></tr></thead><tbody>';
+    var h='<table><thead><tr><th>Date</th><th>Formule</th><th>Contact</th><th>Note</th><th>Montant</th><th>Documents</th></tr></thead><tbody>';
     for(var i=0;i<list.length;i++){
       var o=list[i];
       var d=new Date(o.date).toLocaleString('fr-FR');
       var prem=o.plan==='premium'?' prem':'';
       var files=(o.files||[]).map(function(f){return '<a class="file" href="/admin/file/'+encodeURIComponent(f.stored)+'">Telecharger '+f.original+'</a>';}).join('')||'-';
-      h+='<tr><td>'+d+'</td><td><span class="pill'+prem+'">'+o.plan_label+'</span></td><td>'+(o.customer||'-')+'</td><td class="amount">'+o.amount+' '+o.currency+'</td><td>'+files+'</td></tr>';
+      var contact=[o.name,o.customer,o.phone].filter(Boolean).join('<br>')||'-';
+      var note=(o.note?o.note:'') + ((o.print_qty&&o.print_qty!=='0')?(' [Impressions: '+o.print_qty+']'):'') || '-';
+      h+='<tr><td>'+d+'</td><td><span class="pill'+prem+'">'+o.plan_label+'</span></td><td>'+contact+'</td><td>'+note+'</td><td class="amount">'+o.amount+' '+o.currency+'</td><td>'+files+'</td></tr>';
     }
     h+='</tbody></table>';wrap.innerHTML=h;
   }catch(e){document.getElementById('wrap').innerHTML='<div class="empty">Erreur de chargement : '+e.message+'</div>';}
