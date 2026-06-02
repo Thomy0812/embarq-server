@@ -46,6 +46,11 @@
   footer{background:var(--ink);color:#9DB0B8;padding:30px 0;font-size:13.5px;text-align:center}
   .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--ink);color:#fff;padding:14px 22px;border-radius:12px;font-size:14px;box-shadow:var(--shadow);transition:transform .35s cubic-bezier(.2,.8,.2,1);z-index:200;max-width:90vw}
   .toast.show{transform:translateX(-50%) translateY(0)}
+.coords{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+  .coords input,.coords textarea{width:100%;padding:10px 12px;border:1px solid #e0d8c8;border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink)}
+  .coords textarea{resize:vertical}
+  .opt{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0}
+  .opt input{width:80px;padding:8px 10px;border:1px solid #e0d8c8;border-radius:8px;font-size:14px;text-align:center}
 </style>
 </head>
 <body>
@@ -70,6 +75,7 @@
       <li>Livraison de chaque roadbook en PDF sous 72 h</li>
       <li>Idéal pour valoriser chaque dossier client</li>
       <li>Tarif dégressif vs achat à l'unité</li>
+      <li>Impression possible : <strong>25 € par roadbook</strong> (en option)</li>
     </ul>
     <p style="font-size:14px;color:var(--ink-soft)">Après l'achat, notre équipe vous recontacte pour organiser l'envoi de vos 10 réservations. Une question ? <a href="mailto:ts@sartenaer.eu" style="color:var(--teal);text-decoration:underline">ts@sartenaer.eu</a></p>
   </div>
@@ -79,7 +85,17 @@
     <div class="price">210 € <small>/ 10 roadbooks</small></div>
     <div class="ptag">Soit 21 € par roadbook.</div>
     <div class="save">Vous économisez près de 90 € (vs 29,99 €/unité).</div>
-    <button class="btn btn-primary" id="pay">Acheter le pack — 210 €</button>
+    <div class="opt">
+      <label for="cprint">Impressions (25 € / roadbook)</label>
+      <input id="cprint" type="number" min="0" max="10" step="1" value="0">
+    </div>
+    <div class="coords">
+      <input id="cname" placeholder="Nom (facultatif)">
+      <input id="cphone" placeholder="Téléphone (facultatif)">
+      <input id="cemail" type="email" placeholder="E-mail (pour le suivi)">
+      <textarea id="cnote" rows="3" placeholder="Une note ? (cadeau, préférences : sport, gastronomie, rythme…)"></textarea>
+    </div>
+    <button class="btn btn-primary" id="pay">Acheter — <span id="total">210 €</span></button>
     <p class="mini">🔒 Paiement sécurisé via Stripe. Paiement unique.</p>
   </div>
 </div>
@@ -91,16 +107,24 @@
 const PLAN = "pack";
 const toastEl=document.getElementById('toast');let tt;
 function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>toastEl.classList.remove('show'),3800);}
+const printEl=document.getElementById('cprint');
+function refreshTotal(){var q=Math.max(0,parseInt(printEl.value,10)||0);document.getElementById('total').textContent=(210+q*25)+' €';}
+printEl.addEventListener('input',refreshTotal);refreshTotal();
 document.getElementById('pay').addEventListener('click',async()=>{
-  const btn=document.getElementById('pay');btn.disabled=true;const o=btn.textContent;btn.textContent='Redirection...';
+  const btn=document.getElementById('pay');btn.disabled=true;const o=btn.innerHTML;btn.textContent='Redirection...';
   try{
     const fd=new FormData();
     fd.append('plan',PLAN);
+    fd.append('print_qty',Math.max(0,parseInt(printEl.value,10)||0));
+    fd.append('name',document.getElementById('cname').value);
+    fd.append('phone',document.getElementById('cphone').value);
+    fd.append('email',document.getElementById('cemail').value);
+    fd.append('note',document.getElementById('cnote').value);
     const r=await fetch('/api/create-checkout-session',{method:'POST',body:fd});
     const data=await r.json();
     if(data.url){window.location.href=data.url;}
-    else{toast(data.error||'Erreur lors de la creation du paiement.');btn.disabled=false;btn.textContent=o;}
-  }catch(err){toast('Erreur reseau : '+err.message);btn.disabled=false;btn.textContent=o;}
+    else{toast(data.error||'Erreur lors de la creation du paiement.');btn.disabled=false;btn.innerHTML=o;}
+  }catch(err){toast('Erreur reseau : '+err.message);btn.disabled=false;btn.innerHTML=o;}
 });
 const p=new URLSearchParams(location.search);
 if(p.get('paiement')==='succes')toast('Paiement recu ! Notre equipe vous recontacte tres vite.');
