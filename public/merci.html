@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Embarq — Merci pour votre commande</title>
+<meta name="robots" content="noindex" />
+<style>
+  :root{--sand:#F4EEE3;--sand-2:#EDE4D3;--ink:#1C2B33;--ink-soft:#465863;--teal:#0E5C63;--teal-deep:#0A4248;--gold:#C8A15A;--gold-soft:#E4CB97;--shadow:0 18px 50px -20px rgba(28,43,51,.35)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Helvetica Neue",Arial,sans-serif;color:var(--ink);background:linear-gradient(180deg,var(--sand),var(--sand-2));line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+  h1,h2,h3{font-family:Georgia,serif;font-weight:600;letter-spacing:-.01em;line-height:1.12}
+  a{color:inherit;text-decoration:none}
+  header.nav{background:rgba(244,238,227,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(28,43,51,.07)}
+  .wrap{max-width:680px;margin:0 auto;padding:0 24px;width:100%}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:70px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:Georgia,serif;font-size:23px;font-weight:600}
+  .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(200,161,90,.18)}
+  main{flex:1;display:flex;align-items:center;padding:50px 0}
+  .card{background:#fff;border-radius:24px;box-shadow:var(--shadow);padding:48px 40px;text-align:center;border:1px solid rgba(28,43,51,.06)}
+  .check{width:74px;height:74px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
+  .check svg{width:38px;height:38px;stroke:#fff;stroke-width:3;fill:none}
+  h1{font-size:34px;margin-bottom:12px}
+  .lead{font-size:17px;color:var(--ink-soft);margin-bottom:28px}
+  .summary{background:#FAF6EE;border:1px solid var(--gold-soft);border-radius:14px;padding:18px 22px;margin:0 auto 28px;max-width:380px;text-align:left;font-size:15px}
+  .summary .row{display:flex;justify-content:space-between;padding:5px 0}
+  .summary .row span:first-child{color:var(--ink-soft)}
+  .summary .amount{font-family:Georgia,serif;font-weight:600}
+  .steps{text-align:left;max-width:420px;margin:0 auto 30px}
+  .steps h3{font-size:16px;margin-bottom:12px;text-align:center}
+  .steps .step{display:flex;gap:12px;margin-bottom:12px;font-size:14.5px;color:var(--ink)}
+  .steps .num{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--teal);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;font-size:15px;font-weight:600;padding:14px 28px;border-radius:999px;background:var(--teal);color:#fff;transition:background .2s}
+  .btn:hover{background:var(--teal-deep)}
+  .mail{margin-top:18px;font-size:13.5px;color:var(--ink-soft)}
+  .mail a{color:var(--teal);text-decoration:underline}
+  footer{padding:24px 0;text-align:center;font-size:13px;color:var(--ink-soft)}
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap nav-inner">
+  <a href="index.html" class="brand"><span class="dot"></span>Embarq</a>
+  <a href="index.html" style="font-size:14px;color:var(--ink-soft)">Accueil</a>
+</div></header>
+
+<main><div class="wrap">
+  <div class="card">
+    <div class="check"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+    <h1>Merci pour votre commande !</h1>
+    <p class="lead">Votre paiement a bien été reçu. Nous préparons votre roadbook avec soin.</p>
+
+    <div class="summary" id="summary" style="display:none">
+      <div class="row"><span>Formule</span><span id="s-plan">—</span></div>
+      <div class="row"><span>Montant payé</span><span class="amount" id="s-amount">—</span></div>
+    </div>
+
+    <div class="steps">
+      <h3>La suite</h3>
+      <div class="step"><span class="num">1</span><div>Un e-mail de confirmation vient de vous être envoyé.</div></div>
+      <div class="step"><span class="num">2</span><div>Notre équipe prépare votre roadbook personnalisé, enrichi de lieux, restaurants et bons plans.</div></div>
+      <div class="step"><span class="num">3</span><div>Vous recevez votre roadbook <strong>sous 72 h</strong>.</div></div>
+    </div>
+
+    <a href="index.html" class="btn">Retour à l'accueil</a>
+    <p class="mail">Une question ? Écrivez-nous à <a href="mailto:ts@sartenaer.eu">ts@sartenaer.eu</a></p>
+  </div>
+</div></main>
+
+<footer>© 2026 Embarq — Conçu pour les voyageurs soigneux.</footer>
+
+<script>
+// ====== Récap de la commande (montant réel récupéré côté serveur) ======
+var orderAmount = null, orderCurrency = 'EUR';
+(async function(){
+  var sid = new URLSearchParams(location.search).get('session_id');
+  if(!sid) return;
+  try{
+    var r = await fetch('/api/order-amount?session_id=' + encodeURIComponent(sid));
+    var d = await r.json();
+    if(d && d.amount){
+      orderAmount = parseFloat(d.amount); orderCurrency = d.currency || 'EUR';
+      document.getElementById('s-plan').textContent = d.plan || 'Commande';
+      document.getElementById('s-amount').textContent = d.amount + ' ' + orderCurrency;
+      document.getElementById('summary').style.display = 'block';
+    }
+    fireConversion();
+  }catch(e){ fireConversion(); }
+})();
+
+// ====== Conversion Google Ads ======
+// Renseignez ces 2 valeurs une fois l'action de conversion créée dans Google Ads :
+var GADS_ID = "";      // ex: "AW-XXXXXXXXXX"
+var GADS_LABEL = "";   // ex: "AbCdEfGhIj-1234"
+function fireConversion(){
+  if(!GADS_ID || !GADS_LABEL) return; // tant que non configuré, on ne fait rien
+  var s = document.createElement('script');
+  s.async = true; s.src = "https://www.googletagmanager.com/gtag/js?id=" + GADS_ID;
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', GADS_ID);
+  gtag('event', 'conversion', {
+    'send_to': GADS_ID + '/' + GADS_LABEL,
+    'value': orderAmount || undefined,
+    'currency': orderCurrency
+  });
+}
+</script>
+</body>
+</html>
