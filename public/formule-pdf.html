@@ -56,6 +56,9 @@
   footer{background:var(--ink);color:#9DB0B8;padding:30px 0;font-size:13.5px;text-align:center}
   .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--ink);color:#fff;padding:14px 22px;border-radius:12px;font-size:14px;box-shadow:var(--shadow);transition:transform .35s cubic-bezier(.2,.8,.2,1);z-index:200;max-width:90vw}
   .toast.show{transform:translateX(-50%) translateY(0)}
+.coords{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+  .coords input,.coords textarea{width:100%;padding:10px 12px;border:1px solid #e0d8c8;border-radius:10px;font-size:14px;font-family:inherit;background:#fff;color:var(--ink)}
+  .coords textarea{resize:vertical}
 </style>
 </head>
 <body>
@@ -93,6 +96,12 @@
       <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" multiple hidden />
     </div>
     <div class="filelist" id="filelist"></div>
+    <div class="coords">
+      <input id="cname" placeholder="Nom (facultatif)">
+      <input id="cphone" placeholder="Téléphone (facultatif)">
+      <input id="cemail" type="email" placeholder="E-mail (pour le suivi)">
+      <textarea id="cnote" rows="3" placeholder="Une note ? (cadeau, préférences : sport, gastronomie, rythme…)"></textarea>
+    </div>
     <button class="btn btn-primary" id="pay">Payer 29,99 € et envoyer</button>
     <p class="mini">🔒 Document privé, supprimé après traitement.</p>
   </div>
@@ -119,6 +128,10 @@ document.getElementById('pay').addEventListener('click',async()=>{
   try{
     const fd=new FormData();
     fd.append('plan',PLAN);
+    fd.append('name',document.getElementById('cname').value);
+    fd.append('phone',document.getElementById('cphone').value);
+    fd.append('email',document.getElementById('cemail').value);
+    fd.append('note',document.getElementById('cnote').value);
     files.forEach(f=>fd.append('documents',f));
     const r=await fetch('/api/create-checkout-session',{method:'POST',body:fd});
     const data=await r.json();
