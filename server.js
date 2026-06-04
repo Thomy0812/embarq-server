@@ -80,6 +80,19 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/api/order-amount', async (req, res) => {
+  try {
+    const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
+    res.json({
+      amount: (session.amount_total / 100).toFixed(2),
+      currency: (session.currency || 'eur').toUpperCase(),
+      plan: session.metadata?.plan_label || 'Commande',
+    });
+  } catch (e) {
+    res.json({});
+  }
+});
+
 app.post('/api/create-checkout-session', upload.array('documents', 10), async (req, res) => {
   try {
     const plan = PLANS[req.body.plan];
@@ -96,7 +109,7 @@ app.post('/api/create-checkout-session', upload.array('documents', 10), async (r
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       line_items: lineItems,
-      success_url: process.env.PUBLIC_URL + '/' + page + '?paiement=succes',
+      success_url: process.env.PUBLIC_URL + '/merci.html?session_id={CHECKOUT_SESSION_ID}',
       cancel_url: process.env.PUBLIC_URL + '/' + page + '?paiement=annule',
       customer_email: req.body.email || undefined,
       metadata: {
